@@ -1,4 +1,4 @@
-1/29/2016			RailsMaster Guide
+11/19/2015			RailsMaster Guide
 
 FAVORITE BOOKS:
 
@@ -22,6 +22,8 @@ RESOURCES:
 http://www.tutorialspoint.com/ruby-on-rails/rails-quick-guide.htm
 http://guides.rubyonrails.org/getting_started.html
 http://api.rubyonrails.org
+http://getbootstrap.com
+rubygems.org			//for all gems go to documentation to solve issues, like paperclip and S3 issue
 guides.railsgirls.com
 railscasts, gorails, baserails
 ruby-doc.org
@@ -39,11 +41,27 @@ Rspec Tutorial from daniel kehoe - a pdf file in my rails folder
 Docker or Vagrant for development deployments using puppet/chef
 Capistrano deployment to AWS
 moltin.com,  shopify.com  //ecommerce platform
+
+JAVASCRIPT:
+
+Baked in RoR: Jquery framework and coffescript
+coffeescript: alternative javascript syntax that compiles into proper javascript
+
+Others:
+Ember 		//created by Yehuda Katz, also member of jquery and rails core team
+AngularJS	//supported by google
+Jquery Masonry	//cascading grid layout library, pinterest application
+
+Backbone, Angular, Ember are referred to as client-side MVC frameworks.  React released by facebook. 
+
+headjs-rails gem	//speed up your app by loading JS asynchronously
+
 __________________________________________________________________________________________
 
 COMMAND LINE:
 
 rubymine . = opens up rubymine
+shift + command +/- to expand or collapse all code blocks in a file
 edit . = opens up textwrangler
 open . = opens finder of current directory
 open <file> = opens file
@@ -60,6 +78,8 @@ command: is always a single word
 
 man echo = gives manual pages of command echo, q to exit
 man curl = information on curl command - used to scrape content
+curl -OL http://railstutorial.org/rails.png	//downloads rails log from this website
+mv rails.png app/assets/images/	//moves previously downloaded image to images folder
 pwd = present working directory or print working directory, current path
 w = who is online
 users = how many users
@@ -73,7 +93,7 @@ whatis <command> = shows all options of command
 Exit: q, x, ctrl + q, ESC
 semicolons between commands //adding multiple commands to the same line
 ps -a = all users processes
-ps aux = a for all, u for user, x for background processes
+ps aux = see all processes. a for all, u for user, x for background processes
 ps -cx = more detail on processes
 ps -cvx = more detail
 top = all running processes, q to get out of display
@@ -230,6 +250,7 @@ git add -A
 git commit -m “message of new commit”
 git remote add origin git@github.com:KudosX/cheat_sheets.git	//repo name
 git push -u origin master		
+git mv README.rdoc README.md
 
 2nd+ times:
 
@@ -241,10 +262,16 @@ Add readme file:
 
 nano readme
 git add readme			//adds readme file to git staging
+git add template.rb readme.md	//adds template.rb and readme.md file to be commited.
+
 
 Commands:
 
 git checkout -f			//rolls code back to last commit, all errors melt away
+git checkout 23799a		//usually the first 6 characters of commit id to roll back to this specific commit
+git checkout master		//to return to master branch
+git stash			//command stashes your unstaged changes allow you to work on clean directory and lets you restore
+				//the changes using git stash pop
 git remote -v			//to see where remotes point to
 git status
 git log
@@ -253,6 +280,7 @@ git log - -stat			//stats of additions/deletions
 git log - -stat - -oneline	//easier to read adds/deletes
 git log - -oneline - -stat - -all //show all branches and stats on oneline
 gitk				//opens up gui 
+git reset - -hard		#discards most recent changes, goes back to last commit
 git reset - -hard HEAD		#discards most recent changes, goes back to last commit
 git branch 			#to see list of all branches currently in repository
 git branch -a			#list branches remote and local machine
@@ -267,6 +295,7 @@ git branch 			#to see list of all branches currently in repository
 git branch -a			#list branches remote and local machine
 git branch <branchname>		#to create new branch name <name>	
 git checkout <branchname> // will make a copy of all files from master branch to this branch and then can make changes to the same files without affecting files on master branch
+git checkout -b <branchname>	//will create new branch with files from master
 git checkout master 		// will move back to the master branch
 
 Merge branch with master:
@@ -281,65 +310,27 @@ git pull			#to retrieve changes remotely
 git push <remote> <branch>	//this pushes branch to remote branch
 example: git push origin master  //pushes master branch to origin branch
 
-__________________________________________________________________________________________
 
+TYPICAL GIT WORKFLOW FOR BRANCHES:
 
-HEROKU:
-
-heroku - -version
-heroku login
-heroku keys:add		//added github_rsa.pub SSH keys
-heroku create		//create new app, this creates a git remote associated with your local git repo
-heroku rename <new name>	//pinterestx.herokuapp.com or git.heroku.com/pinterestx.git
-
-move gem ‘sqlite3’ to :development, :test group in gemfile
-add to gemfile
-group :production do
- gem ‘pg’
- gem ‘rails_12factor’
-end
-
-bundle install - -without production 	//tells rails to ignore productio
-
-git add -A			 
-git commit -m “herokurized - moved sqlite3 gem and added pg in production”	
-git push			//skip this if you don’t want changes posted on github
-git push heroku master
-
-heroku open		//open webpage in shell with this command
-
-heroku logs - -tail	//displays logs of interaction with browser
-control c		//to close streaming logs
-
-heroku ps		//how many dynos are running
-
-heroku ps:scale web=2	//would scale your app to 2 dynos
-heroku ps:scale web=1	//scale it back to 1
-
-procfile: 		//is a text file in your root file on heroku to declare what command should be  executed to start your app. in this case it is: web: bundle exec puma -C config/puma.rb (web means it will be attached to http routing stack of heroku and receive web traffic)(the command is to run puma the web server).
-
-heroku local web	//examines procfile and view your app at http://localhost:5000
-## make any changes to your local app and run “heroku local” to view app at localhost:5000
-
-heroku addons:create <addon>
-heroku addons		//list addons your app is using
-heroku addons:open <addon>	//this will open up addon to view its results
-
-heroku run rails console //to open a one-off dyno rails console of your app on heroku, just like on mac
-exit			  //to exit console
-
-heroku run bash		//start a console, this creates an ephemeral filespace, use normal bash commands like ls
-exit			//to exit. can’t SSH into heroku.  once exit the one-off dyno is removed
-
-heroku config		//to view config vars on heroku
-heroku pg		//view details of pg database
-heroku pg:psql		//to connect to database using psql query
-
-https://devcenter.heroku.com/articles/heroku-postgresql
-
-heroku run rake db:migrate	//to execute rake command in heroku, actually does it in a one-off then removes itself
-
-https://devcenter.heroku.com/categories/ruby
+git checkout master		//to make sure you start on master branch
+git checkout -b my-new-branch	//creates new branch called my-new-branch
+				//after some changes are made and want to preserve branch
+	git add -A
+	git commit -m “comments”
+	git push -u origin <branchname>	//subsequent pushes can just do: git push, branch is preserved
+NOTE:	git push			//subsequent pushes to branch after did git push -u origin <branchname> 1st time, branch preserved
+				//subsequent commits/pushes
+git add -A			//skip this step if pushed to branch already
+git commit -m “final branch commit”	//skip this step if pushed to branch already
+git checkout master		//get back on master
+git merge my-new-branch	//merge branch to master, branch is deleted
+git push			//push to master
+git push heroku			//push to heroku
+heroku pg:reset DATABASE	//reset database, if necessary
+heroku run rake db:migrate
+heroku run rake db:seed	//if want fake users in production server
+heroku restart			//restart webserver
 
 
 __________________________________________________________________________________________
@@ -363,12 +354,16 @@ global  - super gemset, inherited by all other gemsets for the given ruby
 
 
 rails -v
+gem install rails -v 5.0.0.beta3
 ruby -v
 gem -v				//rubygems manager version
 rvm -v				//rvm version 
 rvm env
 rvm install 2.3.0		//installs ruby 2.3.0 must put 0 at end
 rvm - -default use 2.3.0	//set ruby 2.3.0 as default
+
+rvm gemset use rails425	//makes directory use rails425 gemset
+
 
 
 Steps to create sticky gemset per application:
@@ -543,6 +538,90 @@ https://medium.com/polecat-blog/mobile-analytics-mixpanel-vs-amplitud-vs-flurry-
 __________________________________________________________________________________________
 
 
+
+HEROKU:
+
+heroku - -version
+heroku login
+heroku keys:add		//added github_rsa.pub SSH keys
+heroku create		//create new app, this creates a git remote associated with your local git repo
+heroku rename <new name>	//pinterestx.herokuapp.com or git.heroku.com/pinterestx.git
+
+move gem ‘sqlite3’ to :development, :test group in gemfile
+add to gemfile
+group :production do
+ gem ‘pg’
+ gem ‘rails_12factor’
+end
+
+bundle install - -without production 	//tells rails to ignore productio
+
+TYPICAL WORKFLOW:
+
+git add -A			 
+git commit -m “herokurized - moved sqlite3 gem and added pg in production”	
+git push			//skip this if you don’t want changes posted on github
+git push heroku master
+heroku run rake db:migrate	//to execute rake command in heroku, actually does it in a one-off then removes itself
+
+heroku git:clone -a myapp	//if delete github repo and reupload to github and then need to associate with existing heroku app
+heroku config - -app myapp	//config of a specific heroku app
+
+heroku open		//open webpage in shell with this command
+
+heroku logs - -tail	//displays logs of interaction with browser
+control c		//to close streaming logs
+
+heroku ps		//how many dynos are running
+
+heroku ps:scale web=2	//would scale your app to 2 dynos
+heroku ps:scale web=1	//scale it back to 1
+
+procfile: 		//is a text file in your root file on heroku to declare what command should be  executed to start your app. in this case it is: web: bundle exec puma -C config/puma.rb (web means it will be attached to http routing stack of heroku and receive web traffic)(the command is to run puma the web server).
+
+heroku local web	//examines procfile and view your app at http://localhost:5000
+## make any changes to your local app and run “heroku local” to view app at localhost:5000
+
+heroku addons:create <addon>
+heroku addons		//list addons your app is using
+heroku addons:open <addon>	//this will open up addon to view its results
+
+heroku run rails console //to open a one-off dyno rails console of your app on heroku, just like on mac
+exit			  //to exit console
+
+heroku run bash		//start a console, this creates an ephemeral filespace, use normal bash commands like ls
+exit			//to exit. can’t SSH into heroku.  once exit the one-off dyno is removed
+
+heroku config		//to view config vars on heroku
+heroku pg		//view details of pg database
+heroku pg:psql		//to connect to database using psql query
+
+https://devcenter.heroku.com/articles/heroku-postgresql
+
+heroku run rake db:migrate	//to execute rake command in heroku, actually does it in a one-off then removes itself
+
+heroku config:set S3_BUCKET_NAME=bucket name
+heroku config:set AWS_ACCESS_KEY_ID=access id
+heroku config:set AWS_SECRET_ACCESS_KEY=secret key
+heroku config:set S3_HOST_NAME=s3-us-west-2.amazonaws.com
+heroku config:set S3_REGION=us-west-2
+heroku config:unset S3_BUCKET_NAME		//deletes variable in config vars
+heroku run rake db:reset			//delete and recreate database
+
+https://devcenter.heroku.com/categories/ruby
+
+WORKFLOW IN A PRODUCTION SITE ON HEROKU:
+
+heroku maintenance:on	//turns on maintenance mode and will serve up a static page while in maintenance, can customize this page
+git push heroku
+heroku run rake db:migrate
+heroku maintenance:off	//turns off maintenance
+
+
+__________________________________________________________________________________________
+
+
+
 RAILS:
 
 -always look at gems in toolbox or github to do something that has been done before.
@@ -555,10 +634,17 @@ RAILS:
 WORKFLOW FOR NEW RAILS APP: (mainly from learn ruby on rails - john elder book)
 
 1. rails new <appname>		//adds many gems and one controller and view
-1a. rake db:create db:migrate //if using postgresql, otherwise will get error of no database
+1a. rails new <appname> -d postgresql	//this uses pg vs. sqlite
+1b. rake db:create db:migrate //if using postgresql, otherwise will get error of no database
 2. rails s
 3. http://localhost:3000/	//view your new app in a browser
 4. create rubyrails_version.txt file app folder for ruby, rails and gemset version
+5. rake routes		//to see list of routes and to help see the GET (web pages) that have been created
+
+UPDATE RAILS IN EXISTING APP:
+
+1. rake rails:update	//to update version of rails on app
+2. bundle update	//change gemfile to updated rails version and then run
 
 DELETE APP:
 
@@ -575,7 +661,7 @@ CHANGING GEMFILE:
      gem’pg’,   ‘0.17.1’		//postgres, heroku only uses postgres
      gem’rails_12factor’,’0.02’		//this is specific for heroku
    end
-3. bundle install- -without production	//runs bundle but, not for production
+3. bundle install- -without production	//runs bundle but, not for production, bundle remembers this when running bundle
 
 ADDING PAGES via CONTROLLER:
 
@@ -605,6 +691,7 @@ ADDING LINKS/MENU VIA LAYOUTS/APPLICATION.HTML.ERB:
 Creating partials is a 2 step process:
 1. create partial, in our case views/home
 2. call the partial from a file, in our case the layouts/application.html.erb
+3. partial views shouldn’t rely on instance variables, they should be totally self-sufficient, so no @ such as @projects
 
 1. rake routes		//show all routes currently available, 1st column shows the route you need to use for the link_to tag, just add _path to end of it
 2. <%= link_to ‘Home’, root_path %>
@@ -616,6 +703,36 @@ add the code from #2 above
 add <%= render ‘home/header’ %> just above the <%= yield %> tag.
 5. the contents of application.html.erb get outputted every time a page is requested. The <%=yield%> tag is calling the contents of your page (i.e. app/views/aboutus) and outputting it in that spot. It also takes the partial and outputs just above the content.
 
+3 ASSET FILES:
+
+app/assets: assets specific to the present application
+lib/assets: assets for libraries writeen by your dev team
+vendor/assets: assets from third-party vendors
+
+assets path is served by gem called sprockets, sprockets provides the asset pipeline.
+the first time a users visits your application, the entire asset pipeline is cached for future requests
+
+MANIFEST FILE:
+
+app/assets/stylesheets/application.css	//is the manifest file for app-specific CSS
+						//use this file to tell rails via sprockets gem how to combine to form single files
+app/assets/javascripts/application.js		//manifest file for javascript
+
+
+PREPOCESSOR ENGINES:
+
+foobar.js.coffee	//preprocessor engines can be chained, so, this gets run thru coffee script first
+foobar.js.erb.coffee	//this gets run thru coffer first, then erb then js. code is ran right to left
+foobar.css.scss		//runs thru scss first then css
+
+SCSS only ADDS features to CSS, rather than defining an entirely new syntax.
+
+SASS VS. LESS:
+
+Sass uses $
+Less uses @
+getbootstrap.com/customze/#less-variables	//gives us many variables but are in Less. bootstrap-sass gem provides Sass equivalents
+
 USING BOOTSTRAP, JUMBOTRON, BUTTONS:
 
 1. www.getbootstrap.com	//“components” link at top, add any code snippet to your page.
@@ -623,7 +740,7 @@ USING BOOTSTRAP, JUMBOTRON, BUTTONS:
 3. bundle install
 4. add file to app/assets/stylesheets and name it bootstrap.css.scss or anything else
 then add these 2 lines to the file
-@import “bootstrap-sprockets”;
+@import “bootstrap-sprockets”;		//these 2 lines include the entire Bootstrap CSS framework
 @import “bootstrap”;
 5. add these 2 lines to the app/assets/javascripts/application.js file
 //=require bootstrap-sprockets
@@ -652,6 +769,7 @@ BOOTSTRAP - ADDING A NAVIGATION BAR:
 3. change html to ruby on brand tag <%=link_to’myAppName’,root_path,class:’navbar-brand’%>
 4. can have footer, left side and ride side partials as well, just add them to application file.
 
+
 CUSTOMIZING BOOTSTRAP:
 
 -to customize tab at getbootstrap.com.  click on less variables and select jumbotron
@@ -674,14 +792,14 @@ config.action_mailer.default_url_options={host:’localhost’,port:3000} //abov
 config.action_mailer.default_url_options={host:’yourDomainNameOfApplication.com’}
 5. app/views/layouts/application.html.erb	//add alert information
 <div class=“container”>
-  <%flash.each do|name, msg|%>
+  <%flash.each do|name, msg|%>			//no <%= since we don’t want it outputed to the screen
     <%=content_tag(:div,msg,class:”alert alert-info”)%>
   <%end%>
   <%=yield %>
 </div>		//snippet of code from alerts under components on getbootstrap.com
 	//this is ruby loop, for each flash msg, do something, output msg in CSS div with class “alert alert-info”
 NOTE: <%= means output this to the screen, <% means its ruby code
-6. rails g devise:views		//this creates all the view pages /app/views/devise
+6. rails g devise:views		//this creates all the view pages /app/views/devise, exposes views from within gem
 7. rails g devise user		//creates user table and database migration
 8. rake db:migrate		//pushes migration into database, can modify columns, rows before this command is run by going to db/migrate
 9. rake routes			//to see list of pages we have and URL’s to find pages
@@ -689,6 +807,27 @@ NOTE: <%= means output this to the screen, <% means its ruby code
 11. app/views/devise		//is list of all pages to modify
 12. page 111 in learn ruby on rails by john elder to change devise pages and navbar
 13. page 111 to 205 to customize entire app, pinterest clone
+13a git add -A
+13b git commit -m “changes made”
+13c git push heroku
+14. heroku run rake db:migrate		//this pushes migration to production environment on heroku
+15. rake routes				//to see all the routes for the pages created by devise: first column is route,
+				//2nd column: GET(web page), POST(form submission), Delete (logout)
+
+16. adding admin field to users table, p172, rails4 in action:
+rails g migration add_admin_to_users admin:boolean
+//add default: false to the migration line such as;
+add_column :users, :admin, :boolean, default: false
+
+***NAMESPACE: is organizing a group of controllers under a namespace, most commonyly group administrative controllers under Admin::namespace, so these controllers would be placed under app/controllers/admin directory and then grouped together in router using namespace. usually by running:
+rails g controller admin/application index
+
+***NAMESPACE: the main controller of your app, in the root namespace, is called ApplicationController so, makes sense that any other main controllers in namespaces should also be called ApplicationController.  basically nested from ActionController::Base or 
+class Admin::ApplicationController < ApplicationController, from ActionController::Base
+
+***changing stock messages in devise: config/locales/devise.en.yml
+
+
 
 PUSHING TO HEROKU:
 
@@ -722,6 +861,7 @@ Possible data types: :binary, :boolean, :date, :datetime, :decimal, :float, :int
 10. p. 163, storing passwords using environmental variables
 11. rails g migration AddNameToUsers name:string	//add column Name to Users table
 or rails g migration add_name_to_users name:string	//camel case  or underscores
+rails g migration remove_name_from_users name:string	//removes name field from users table
 12. rake db:migrate
 
 TEMPLATES:
@@ -746,6 +886,7 @@ ________________________________________________________________________________
 
 RAILS COMMANDS:
 
+
 rails -v
 ruby -v
 
@@ -756,13 +897,63 @@ http://localhost:3000/posts	#to view post application
 
 control c		#to stop web server and return to command prompt
 control d 		#to close session
-rails c			#rails console, exit to exit console
+rails c			#rails console, Cntrl-D to exit
+rails c - -sandbox	//this allows us to make changes to database in console but, upon exit all changes are rolled back
 
+
+>>Project.create		//method create for object Project
+>>Project.create!		//createBang, raises an exception if any validations fail
+>>Project.create!(name: “blah blah”)	//with name argument
+>>Project.delete_all		//delete all objects in Project
 >>User				//will return all users in the database
 >>User.find(3)			//will give an error since ID 3 of foo was destroyed
 >>User.find_by(id: 3)		//only returns user 3 data and then nil
 >>User.find_by(email: “mikey@gmail.com”)	//finds all users by that email
->>@user = User.first		//first user
+>>User.first			//first user
+>>User.all			//all users
+>>User.name			//name of users
+>>User.email			//emails of users
+>>User.updated_at		//when updated
+>>user = User.new(name: "Max", email: "max@shit.com")	//to create new user
+>>User.valid?			//verify if object is valid
+>>User.errors.full_messages	//displays reason for error (false statement)
+>>User.save			//saves user
+>>User.create(name: “max2”, email: “max2@shit.com”)	//combines new and save in 1 command
+>>User.destroy			//destroy user
+>>uUser.email = “foo@bar.com”	//this changes email address
+
+>>user = User.find_by(email: “max@gmail.com”)		//once define user then use method on user
+>>User.password_digest					//displays hash for password
+>>User.authenticate(“password”)			//true if accurate and false if not
+>>User.errors.full_messages				//define a user in rails console and if false then run this command to see why
+
+
+RAILS SHORTCUTS:
+
+rails server = rails s
+rails console = rails c
+rails generate = rails g
+bundle install = bundle
+rake test = rake
+
+
+UNDO RAILS COMMANDS:
+
+rails generate controller StaticPages home help
+rails destroy controller StaticPages home help
+
+rails generate model User name:string email:string
+rails destroy model User
+
+bundle exec rake db:rollback	//rollback 1 migration
+bundle exec rake db:migrate VERSION=0	//rolls back to first migration
+rake db:reset	//does db:drop and db:setup in 1 command
+rake db:drop	//deletes database
+rake db:setup	//does db:create, db:schema:load, db:seed
+rake db:schema:load	//creates tables and columns within existing database following schema.rb
+rake db:create		//creates database
+rake db:reset.all	//resets db for all environments
+
 
 -when a browser sends requests to WEBrick web server, diagnostic messages are written to console and to log/development.log file, the same messages
 
@@ -795,7 +986,9 @@ rails destroy model [name]
 
 rails g migration add_ColumnName_to_TableName #adds a column to table
 rails g migration add_author_to_posts author:string	#example with author being a string
+rails g migration remove_author_from_posts author:string	//this removes the field from the table
 
+rake stats		#list of lines of code, classes, methods, etc.
 rake - -tasks		#list of tasks your application can use along with short description
 rake -T			#list of rake commands
 rake -T db		//will list out only the db rake commands
@@ -817,6 +1010,26 @@ rails g integration_test user_flow #this creates a file named test/integration/u
 rake db:schema:dump RAILS_ENV=production	//this will change to production db
 
 
+rake db:create 		//creates the database for the current env
+rake db:create:all 	//creates the databases for all envs
+rake db:drop 		//drops the database for the current env
+rake db:drop:all 	//drops the databases for all envs
+rake db:migrate 	//runs migrations for the current env that have not run yet
+rake db:migrate:up 	//runs one specific migration
+rake db:migrate:down 	//rolls back one specific migration
+rake db:migrate:status	//shows current migration status
+rake db:rollback 	//rolls back the last migration
+rake db:forward 	//advances the current schema version to the next one
+rake db:seed 		//(only) runs the db/seed.rb file
+rake db:schema:load 	//loads the schema into the current env's database, if have a ton of migrations, this is quicker
+rake db:schema:dump 	//dumps the current env's schema (and seems to create the db as well)
+rake db:setup 		//runs db:schema:load, db:seed
+rake db:reset 		//runs db:drop db:setup
+rake db:migrate:redo 	//runs (db:migrate:down db:migrate:up) or (db:rollback db:migrate) depending on the specified migration
+rake db:migrate:reset 	//runs db:drop db:create db:migrate
+rake db:seed		//seeds database, as long as db/seeds.rb is setup
+
+
 Production:
 
 -In development it skips everything except the file processing
@@ -827,6 +1040,120 @@ RAILS_ENV=production bundle exec rake assets:precompile
 
 
 __________________________________________________________________________________________
+
+
+TESTING:
+
+minitest for unit testing
+capybara for acceptance testing, integration testing from a user perspective
+-in most cases capybara is used with rspec or minitest
+minitest-rails-capybara to integrate both testing libraries with rails
+minitest-reporters for test output customization including colorizing
+guard for automated testing
+
+GENERATE INTEGRATION TESTS:
+
+rails g integration_test users_setup	//testing uses signup process, put into test/integration folder
+rails g integration_test site_layout	//testing navigation process
+
+GUARD TESTING:
+
+any time you add a controller or model then tests are created in test folder
+
+make sure these gems are in gemfile:
+group :development, :test do
+  gem 'sqlite3',     '1.3.9'
+  gem 'byebug',      '3.4.0'
+  gem 'web-console', '2.0.0.beta3'
+  gem 'spring',      '1.1.3'
+end
+
+group :test do
+  gem 'minitest-reporters', '1.0.5'
+  gem 'mini_backtrace',     '0.1.3'
+  gem 'guard-minitest',     '2.3.1'
+end
+
+then add this code to test/test_helper.rb just below this line: require 'rails/test_help'
+require "minitest/reporters"
+Minitest::Reporters.use!
+
+then add this line to config/initializers/backtrace_silencers.rb
+Rails.backtrace_cleaner.add_silencer { |line| line =~ /rvm/ }
+
+then add these lines to the guardfile:
+p173 of the michael hartl book
+
+
+TESTING METHODOLOGY:
+
+1. place byebug in code where logs are indicating a problem, most likely in controller
+2. go to console and type in some kind of action like create, and code should stop at point where byebug is, if not, problem is before
+3. or go to chrome and under network and create a new account in web and see what errors are generated
+4. restart server
+5. spring status
+6. spring stop, to start spring open a rails console
+7. check log files
+
+-admin and user login is in db/seeds.rb
+
+
+
+TEST PRODUCTION ENVIRONMENT ON MAC:
+
+-stop rails server
+-rake assets:precompile	//compiles css and JS and puts in public/assets so they can be served by web server on mac
+-rake db:migrate RAILS_ENV=production	//run migrations for production environment, separate db vs. development db.
+-change config/environments/production.rb from:
+config.serve_static_files = ENV['RAILS_SERVE_STATIC_FILES'].present?to this:config.serve_static_files = true
+-start the server using this command:
+SECRET_KEY_BASE=`rake secret` rails s -e production
+
+
+TO SEE PROCESSES FOR SPRING ONLY:
+
+ps aux		//is all processes
+ps aux | grep spring		//run results throu grep pattern-matcher using Unix pipe |
+spring stop		//stops all spring processes
+pkill -15 -f spring	//kills all spring processes
+
+
+ps aux | grep server		//all rails server processes
+kill -9 <pid>			//kill a single process
+kill -15 <pid>			//-15 also works
+https://en.wikipedia.org/wiki/Unix_signal#List_of_signals
+
+
+open new shell and type in
+guard init
+bundle exec rake test or just		//bundle exec not normally needed
+rake test
+Ctrl-D 		//to exit guard or close shell
+
+rake test		#runs all tests by default
+rake test test/models/user_test.rb	#will just run this test
+rake test:models	#runs all tests under test/models folder, in the past called unit tests
+rake test:controllers	#runs all tests under test/controllers folder, previously called functional tests
+
+
+-BDD(Behavior-Driven Developoment) is driven by feature tests and refines the product requirements and user experience.
+-TDD(Test-Driven Development) is driven by unit tests and is more microscopic than BDD.TDD is good for refactoring code. 
+
+PRY for debugging code from rails console. page 280 in Rails 4 Test Prescription for setup and gems
+-the pry-rails gem allows it to become not only IRB replacement but, also Rails Console
+
+-continuous integration (CI) which automatically runs tests whenever repository is updated common ones:
+jenkins-ci.org, travis-ci.com, circleci.com
+
+-FactoryGirl Gem is for generating factories or fixtures to populate a database with sample date.  A factory is an object that creates other objects.
+-test doubles, 2 types: stubs and mocks. Stubs provide canned answers to calls made during the test, Mocks are pre-programmed objects that reproduce behavior of the object
+-Capybara Gem for BDD, make sure to activate selenium driver if use javascript
+-BDD process is complete when you can run rake test and see that every feature is implemented and functioning.
+
+
+__________________________________________________________________________________________
+
+
 
 RAILS RUNTIME GEMS:
 
@@ -886,6 +1213,7 @@ Browser
 
 DEFINITIONS:
 
+-classes are a way to organize functions (or also called methods)
 -class: an abstraction that encapsulates data and behavior 
 -class definition: written code that describes a class 
 -instance or object: a unique copy of a class that exists only while a program is running 
@@ -918,6 +1246,12 @@ DATABASE DEFINITIONS:
 -each column of that row is represented by an attribute of that object
 -to see the posts title, call post.title
 -4 major functions of database applications are create, read, update, delete; CRUD
+-create: has 2 actions; new and create
+-reading; has 2 actions; index and show
+-updating; has 2 actions; edit and update
+-destroy; has 1 action; destroy
+
+Crud components: are normally grouped in a controller in this order; index, show, new, create, edit, update, destroy
 
 Post.create title: “First Post”	
 #in console this instantiates a new POST object, assigning value(attribute of title) and saving to db.
@@ -947,6 +1281,7 @@ class Example			#is also correct without explicitly subclassing from Object
  
 -Much of the art of programming is learning what classes are available in the API and deciding when to subclass to inherit usefull methods
 
+class StaticPagesController < ApplicationController	//this says staticpagescontroller inherits from applicationcontroller
 __________________________________________________________________________________________
 
 
@@ -960,6 +1295,9 @@ Everything in Ruby we create and manipulate is an object.  To distinguish one ob
 def name . . . end		#each method assigns data to a variable
 def birthdate . . . end		
 def countdown . . . end		
+
+def self.somemethod		//if you didn’t prefix method with self, it would define the method for an instance of the class
+				//rather than for the class itself
 
 -later we retrieve the data for use in our view file by instantiating the class and calling a method
 -Ruby makes it easy for a method to return data when called; the value assigned by the last statement will be delivered when the method is called.
@@ -975,6 +1313,24 @@ http://api.rubyonrails.org
 
 -we can assign any object to a variable, the variable works like an alias.  
 -We can use a variable anywhere as if it were the assigned object.
+
+CALLBACK:
+
+-is a method that gets invoked at a particular point in the lifecyle of an Active Record object. 
+-example: before saving an email to a database invoke a method to insure it’s all lower case. 
+before_save { self.email = email.downcase }
+-callbacks in ActiveSupport, ActiveRecord, ActiveModel, ActiveJob, AbstractController
+http://api.rubyonrails.org
+
+MODEL CALLBACK:
+
+* represents either before or after
+*_validation
+*_create
+*_update
+*_save
+*_destroy
+
 
 __________________________________________________________________________________________
 
@@ -1110,7 +1466,7 @@ famous_birthdays.each do |name, date|
   end
 end
 
--within the | | we assign the key and value to two variables, only available within the block
+-within the | | we assign the key and value to two variables, only available within the block, called block variable
 -as each key-value pair is presented by the iterator, the variables are assigned and statements executed
 when we find the date is equal to 12 we add the name to the array
 -variables are only available within the block of the method, not outside the method.
@@ -1154,6 +1510,8 @@ CONTROLLER:
 rails g controller [name]	#creates controller, views, helplers, tests and assets
 
 -API’s are managed thru config/routes.rb and controllers/api controllers
+
+-the controller is the first port of call for your routes, routes call up your controllers
 
 -skinny controller, skinny model: separation of concerns more modular. data manipulation in model, controller contains enough code to instantiate a model and render a view
 -more advanced, if there are many methods in a model, then turn methods into service objects that are called from a controller or model, they are placed in app/service folder
@@ -1279,34 +1637,6 @@ end
 
 __________________________________________________________________________________________
  
-TESTING:
-
-minitest for unit testing
-capybara for acceptance testing, integration testing from a user perspective
--in most cases capybara is used with rspec or minitest
-minitest-rails-capybara to integrate both testing libraries with rails
-minitest-reporters for test output customization including colorizing
-guard for automated testing
-
--BDD(Behavior-Driven Developoment) is driven by feature tests and refines the product requirements and user experience.
--TDD(Test-Driven Development) is driven by unit tests and is more microscopic than BDD.TDD is good for refactoring code. 
-
-PRY for debugging code from rails console. page 280 in Rails 4 Test Prescription for setup and gems
--the pry-rails gem allows it to become not only IRB replacement but, also Rails Console
-
--continuous integration (CI) which automatically runs tests whenever repository is updated common ones:
-jenkins-ci.org, travis-ci.com, circleci.com
-
--FactoryGirl Gem is for generating factories or fixtures to populate a database with sample date.  A factory is an object that creates other objects.
--test doubles, 2 types: stubs and mocks. Stubs provide canned answers to calls made during the test, Mocks are pre-programmed objects that reproduce behavior of the object
--Capybara Gem for BDD, make sure to activate selenium driver if use javascript
--BDD process is complete when you can run rake test and see that every feature is implemented and functioning.
-
-rake test		#runs all tests by default
-rake test test/models/user_test.rb	#will just run this test
-rake test:models	#runs all tests under test/models folder, in the past called unit tests
-rake test:controllers	#runs all tests under test/controllers folder, previously called functional tests
-__________________________________________________________________________________________
 
 CONFIGURATION SECURITY:
 
